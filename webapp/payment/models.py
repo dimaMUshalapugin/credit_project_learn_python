@@ -1,30 +1,11 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-
-
-class User(db.Model):
-    __tablename__ = 'users'
-
-    id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(), unique=True)
-    password = db.Column(db.String())
-    blocked = db.Column(db.Boolean())
-    role = db.Column(db.String)
-
-    def __repr__(self):
-        return f'User {self.id}, {self.login}'
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
+from webapp.db import db
 
 
 class Bank(db.Model):
     __tablename__ = "banks"
 
     id = db.Column(db.Integer, primary_key=True)
-    bank_name = db.Column(db.String)
+    bank_name = db.Column(db.String, index=True)
     credit_contracts = db.relationship("CreditContract", backref="bank")
 
     def __repr__(self):
@@ -48,7 +29,7 @@ class LeasingContract(db.Model):
     __tablename__ = 'leasing_contracts'
 
     id = db.Column(db.Integer, primary_key=True)
-    leasing_contract_number = db.Column(db.String, unique=True)
+    leasing_contract_number = db.Column(db.String, unique=True, index=True)
     company_name = db.Column(db.String)
 
     payments = db.relationship("Payment", backref="leasing_contract")
